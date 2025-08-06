@@ -1,7 +1,12 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import pickle
+import pickle 
+import pandas as pd
+model = pd.read_pickle("food_calorie_model.pkl")
+
+with open('food_calorie_model.pkl', 'rb') as file:
+    model = pickle.load(file)
 
 # -------------------------------
 # 🎨 Streamlit Page Configuration
@@ -29,6 +34,24 @@ try:
         model = pickle.load(file)
 except FileNotFoundError:
     st.error("❌ Trained model not found. Please upload `food_calorie_model.pkl`.")
+    st.stop()
+import pickle
+import streamlit as st
+
+MODEL_PATH = "food_calorie_model.pkl"
+
+try:
+    with open(MODEL_PATH, "rb") as file:
+        model = pickle.load(file)
+except FileNotFoundError:
+    st.error("❌ Trained model not found. Please upload `food_calorie_model.pkl`.")
+    st.stop()
+except ModuleNotFoundError as e:
+    st.error(f"⚠️ Module required for deserializing the model is missing: {e}. "
+             "Check your `requirements.txt` and make sure all dependencies are installed.")
+    st.stop()
+if not hasattr(model, "predict"):
+    st.error("🚫 Loaded object is not a valid model. Please check the contents of the pickle file.")
     st.stop()
 
 # -------------------------------
@@ -127,3 +150,6 @@ st.markdown("""
 ---
 💡 *Tip: Try different meals and track your daily intake for better weight management.*
 """)
+import joblib
+
+model = joblib.load("food_calorie_model.joblib")
